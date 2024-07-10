@@ -1,16 +1,16 @@
 import thread
 from event.event_bus import EventBus
-from event.notification_subscriber import NotificationSubscriber
+from controller.mqtt_controller import MQTTController
+from mqtt.client import Client
 from camera.camera import Camera
 import queue
 
 def main():
-    
-    notificationSUbscriber = NotificationSubscriber()
-    EventBus.subscribe('stream', notificationSUbscriber)
-    cameraQueue = queue.Queue()
-    camera = Camera(cameraQueue = cameraQueue)
-    camera.stream()
+     cameraQueue = queue.Queue()
+     camera = Camera(cameraQueue = cameraQueue)
+     mqttController = MQTTController(mqttClient=Client(), cameraQueue = cameraQueue)
+     EventBus.subscribe('stream', mqttController)
+     camera.stream()
     
 
 if __name__ == "__main__":
